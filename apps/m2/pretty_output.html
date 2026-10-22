@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>
+   BeautifulSoup Test Page
+  </title>
+ </head>
+ <body>
+  <h1 id="page-title">
+   Test Page for SoupStrainer
+  </h1>
+  <p id="intro">
+   This paragraph has a
+   <a href="https://example.com" id="main-link">
+    normal link
+   </a>
+   and some
+   <blockquote id="bold-note">
+    bold text
+   </blockquote>
+   in it.
+  </p>
+  <p>
+   <blockquote>
+    Bold paragraph start
+   </blockquote>
+   followed by a
+   <a href="https://example.org/page">
+    second link
+   </a>
+   .
+  </p>
+  <h2 id="section">
+   Edge cases
+  </h2>
+  <ul id="edge-list">
+   <li>
+    <a href="https://example.com/one" id="bold-in-link">
+     <blockquote>
+      Bold text inside a link
+     </blockquote>
+    </a>
+   </li>
+   <li>
+    <blockquote id="bold-wrapper">
+     <a href="https://example.com/two">
+      Link inside bold text
+     </a>
+    </blockquote>
+   </li>
+   <li>
+    <a name="top">
+     Anchor with no href
+    </a>
+   </li>
+   <li>
+    <blockquote>
+     Just bold, no link here
+    </blockquote>
+   </li>
+   <li>
+    <i id="italic-note">
+     Italic text, no link or bold
+    </i>
+   </li>
+  </ul>
+  <div id="footer-links">
+   <blockquote>
+    Another bold
+   </blockquote>
+   <a href="/relative/path" id="relative-link">
+    Relative link
+   </a>
+   <a href="#section">
+    In-page link
+   </a>
+  </div>
+ </body>
+</html>

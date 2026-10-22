@@ -50,6 +50,10 @@ __all__ = [
     "XMLParsedAsHTMLWarning",
 ]
 
+from .new_API import SoupReplacer #my addidtions
+
+
+
 from collections import Counter
 import sys
 import warnings
@@ -215,6 +219,7 @@ class BeautifulSoup(Tag):
         from_encoding: Optional[_Encoding] = None,
         exclude_encodings: Optional[_Encodings] = None,
         element_classes: Optional[Dict[Type[PageElement], Type[PageElement]]] = None,
+        replacer=None,
         **kwargs: Any,
     ):
         """Constructor.
@@ -435,6 +440,7 @@ class BeautifulSoup(Tag):
         self.known_xml = self.is_xml
         self._namespaces = dict()
         self.parse_only = parse_only
+        self.replacer = replacer
 
         if hasattr(markup, "read"):  # It's a file-type object.
             markup = markup.read()
@@ -985,6 +991,7 @@ class BeautifulSoup(Tag):
         return most_recently_popped
 
     def handle_starttag(
+            
         self,
         name: str,
         namespace: Optional[str],
@@ -1016,6 +1023,9 @@ class BeautifulSoup(Tag):
         :meta private:
         """
         # print("Start tag %s: %s" % (name, attrs))
+        if self.replacer is not None:
+            name = self.replacer.replace(name)
+
         self.endData()
 
         if (
@@ -1058,7 +1068,9 @@ class BeautifulSoup(Tag):
 
         :meta private:
         """
-        # print("End tag: " + name)
+        if self.replacer is not None:
+            name = self.replacer.replace(name)
+       # print("End tag: " + name)
         self.endData()
         self._popToTag(name, nsprefix)
 
