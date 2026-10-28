@@ -25,3 +25,13 @@ def test_document_without_og_tag_is_unchanged():
     without_replacer = BeautifulSoup(html, "html.parser")
 
     assert str(with_replacer) == str(without_replacer)
+
+def test_adds_and_replaces_class_attribute():
+    html = '<p>one</p><p class="old">two</p><b>three</b>'
+    replacer = SoupReplacer("p", attrs={"class": "test"})
+    soup = BeautifulSoup(html, "html.parser", replacer=replacer)
+
+    paragraphs = soup.find_all("p")
+    assert len(paragraphs) == 2
+    assert all(p["class"] == ["test"] for p in paragraphs)
+    assert soup.b.get("class") is None
