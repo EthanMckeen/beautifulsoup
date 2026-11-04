@@ -682,6 +682,7 @@ class BeautifulSoup(Tag):
         self.open_tag_counter = Counter()
         self.preserve_whitespace_tag_stack = []
         self.string_container_stack = []
+        self._original_names = {}
         self._most_recent_element = None
         self.pushTag(self)
 
@@ -1022,10 +1023,7 @@ class BeautifulSoup(Tag):
 
         :meta private:
         """
-        # print("Start tag %s: %s" % (name, attrs))
-        if self.replacer is not None:
-            name = self.replacer.replace(name)
-
+        
         self.endData()
 
         if (
@@ -1054,6 +1052,12 @@ class BeautifulSoup(Tag):
         )
         if tag is None:
             return tag
+        if self.replacer is not None:
+            self._original_names[id(tag)] = tag.name
+            self.replacer.apply(tag)
+            tag.attrs = self.builder._replace_cdata_list_attribute_values(
+                tag.name, tag.attrs
+            )
         if self._most_recent_element is not None:
             self._most_recent_element.next_element = tag
         self._most_recent_element = tag
@@ -1069,7 +1073,10 @@ class BeautifulSoup(Tag):
         :meta private:
         """
         if self.replacer is not None:
-            name = self.replacer.replace(name)
+            for t in reversed(self.tagStack):
+                if self._original_names.get(id(t)) == name and t.prefix == nsprefix:
+                    name = t.name
+                    break
        # print("End tag: " + name)
         self.endData()
         self._popToTag(name, nsprefix)
