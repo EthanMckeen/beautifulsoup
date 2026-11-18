@@ -3,6 +3,7 @@ trees."""
 
 import pickle
 import pytest
+
 from bs4.builder._htmlparser import (
     _DuplicateAttributeHandler,
     BeautifulSoupHTMLParser,

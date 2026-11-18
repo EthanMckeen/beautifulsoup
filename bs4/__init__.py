@@ -508,6 +508,28 @@ class BeautifulSoup(Tag):
         clone.original_encoding = self.original_encoding
         return clone
 
+    def __iter__(self) -> Iterator[PageElement]:
+        """Visit every node under this document, one at a time, in
+        document order (depth-first). The document object itself is
+        not yielded.
+
+        This is a generator: nodes are produced on demand and are never
+        collected into a list. The stack holds one iterator per open
+        level, so its size grows with the tree's depth, not with the
+        number of nodes. It is explicit, not recursive, so very deep
+        documents don't hit Python's recursion limit.
+        """
+        stack = [iter(self.contents)]
+        while stack:
+            try:
+                node = next(stack[-1])
+            except StopIteration:
+                stack.pop()
+                continue
+            yield node
+            if isinstance(node, Tag):
+                stack.append(iter(node.contents))    
+    
     def __getstate__(self) -> Dict[str, Any]:
         # Frequently a tree builder can't be pickled.
         d = dict(self.__dict__)
